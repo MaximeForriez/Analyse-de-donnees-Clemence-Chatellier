@@ -1,0 +1,110 @@
+import numpy as np 
+import matplotlib.pyplot as plt 
+from scipy.stats import ( 
+randint, binom, poisson, zipf, norm, lognorm, 
+uniform, chi2, pareto 
+) 
+# --- Lois discrètes --- 
+# 1⃣ Loi de Dirac 
+x = np.linspace(-5, 5, 100) 
+y = np.zeros_like(x) 
+y[np.argmin(np.abs(x - 0))] = 1 
+plt.figure() 
+plt.stem(x, y) 
+plt.title(&quot;Loi de Dirac (x0 = 0)&quot;) 
+plt.xlabel(&quot;x&quot;); plt.ylabel(&quot;P(X=x)&quot;) 
+plt.grid(alpha=0.3) 
+# 2⃣ Loi uniforme discrète 
+a, b = 1, 6 
+x = np.arange(a, b+1) 
+pmf = randint.pmf(x, a, b+1) 
+plt.figure() 
+plt.stem(x, pmf) 
+plt.title(f&quot;Loi uniforme discrète U({a},{b})&quot;) 
+plt.xlabel(&quot;x&quot;); plt.ylabel(&quot;P(X=x)&quot;) 
+plt.grid(alpha=0.3) 
+# 3⃣ Loi binomiale
+n, p = 10, 0.5 
+x = np.arange(0, n+1) 
+pmf = binom.pmf(x, n, p) 
+plt.figure() 
+plt.stem(x, pmf) 
+plt.title(f&quot;Loi binomiale B({n},{p})&quot;) plt.xlabel(&quot;x&quot;); plt.ylabel(&quot;P(X=x)&quot;) plt.grid(alpha=0.3) 
+# 4⃣ Loi de Poisson (discrète) 
+lam = 3 
+x = np.arange(0, 15) 
+pmf = poisson.pmf(x, lam) 
+plt.figure() 
+plt.stem(x, pmf) 
+plt.title(f&quot;Loi de Poisson (λ={lam})&quot;) plt.xlabel(&quot;x&quot;); plt.ylabel(&quot;P(X=x)&quot;) plt.grid(alpha=0.3) 
+# 5⃣ Loi de Zipf-Mandelbrot 
+a = 2 
+x = np.arange(1, 10) 
+pmf = zipf.pmf(x, a) 
+plt.figure() 
+plt.stem(x, pmf) 
+plt.title(f&quot;Loi de Zipf (a={a})&quot;) 
+plt.xlabel(&quot;x&quot;); plt.ylabel(&quot;P(X=x)&quot;) plt.grid(alpha=0.3) 
+# --- Lois continues --- 
+# 6⃣ Loi normale 
+mu, sigma = 0, 1 
+x = np.linspace(mu - 4*sigma, mu + 4*sigma, 300) pdf = norm.pdf(x, mu, sigma) 
+plt.figure() 
+plt.plot(x, pdf) 
+plt.title(f&quot;Loi normale N({mu},{sigma**2})&quot;) plt.xlabel(&quot;x&quot;); plt.ylabel(&quot;f(x)&quot;) plt.grid(alpha=0.3) 
+# 7⃣ Loi log-normale 
+s, scale = 0.954, np.exp(0) 
+x = np.linspace(0, 5, 300) 
+pdf = lognorm.pdf(x, s, scale=scale) 
+plt.figure() 
+plt.plot(x, pdf) 
+plt.title(f&quot;Loi log-normale (s={s})&quot;) plt.xlabel(&quot;x&quot;); plt.ylabel(&quot;f(x)&quot;) plt.grid(alpha=0.3) 
+# 8⃣ Loi uniforme continue 
+a, b = 0, 1 
+x = np.linspace(a - 0.2, b + 0.2, 300) 
+pdf = uniform.pdf(x, a, b - a) 
+plt.figure() 
+plt.plot(x, pdf) 
+plt.title(f&quot;Loi uniforme continue U({a},{b})&quot;) plt.xlabel(&quot;x&quot;); plt.ylabel(&quot;f(x)&quot;) plt.grid(alpha=0.3)
+# 9⃣ Loi du χ² 
+df = 5 
+x = np.linspace(0, 20, 300) 
+pdf = chi2.pdf(x, df) 
+plt.figure() 
+plt.plot(x, pdf) 
+plt.title(f&quot;Loi du χ² (ddl={df})&quot;) 
+plt.xlabel(&quot;x&quot;); plt.ylabel(&quot;f(x)&quot;) 
+plt.grid(alpha=0.3) 
+# Loi de Pareto 
+b = 3 
+x = np.linspace(1, 10, 300) 
+pdf = pareto.pdf(x, b) 
+plt.figure() 
+plt.plot(x, pdf) 
+plt.title(f&quot;Loi de Pareto (b={b})&quot;) 
+plt.xlabel(&quot;x&quot;); plt.ylabel(&quot;f(x)&quot;) 
+plt.grid(alpha=0.3) 
+# Affiche toutes les figures 
+plt.show() 
+# Fonction pour calculer la moyenne et l&#39;écart type 
+def calcul_moyenne_et_ecart(): 
+resultats = {} 
+# --- Loi de Dirac --- 
+x0 = 0 
+resultats[&quot;Dirac&quot;] = {&quot;moyenne&quot;: x0, &quot;ecart_type&quot;: 0} 
+# --- Lois discrètes --- 
+resultats[&quot;Uniforme discrète&quot;] = {&quot;moyenne&quot;: randint.mean(1, 7), &quot;ecart_type&quot;: randint.std(1, 7)} 
+resultats[&quot;Binomiale&quot;] = {&quot;moyenne&quot;: binom.mean(n=10, p=0.5), &quot;ecart_type&quot;: binom.std(n=10, p=0.5)} 
+resultats[&quot;Poisson&quot;] = {&quot;moyenne&quot;: poisson.mean(mu=3), &quot;ecart_type&quot;: poisson.std(mu=3)} 
+resultats[&quot;Zipf-Mandelbrot&quot;] = {&quot;moyenne&quot;: zipf.mean(a=2), 
+&quot;ecart_type&quot;: zipf.std(a=2)} 
+# --- Lois continues --- 
+resultats[&quot;Normale&quot;] = {&quot;moyenne&quot;: norm.mean(loc=0, scale=1), &quot;ecart_type&quot;: norm.std(loc=0, scale=1)} 
+resultats[&quot;Log-normale&quot;] = {&quot;moyenne&quot;: lognorm.mean(s=0.954,  scale=np.exp(0)), 
+&quot;ecart_type&quot;: lognorm.std(s=0.954, scale=np.exp(0))} 
+resultats[&quot;Uniforme continue&quot;] = {&quot;moyenne&quot;: uniform.mean(loc=0,  scale=1), 
+&quot;ecart_type&quot;: uniform.std(loc=0, scale=1)} 
+resultats[&quot;Chi2&quot;] = {&quot;moyenne&quot;: chi2.mean(df=5), &quot;ecart_type&quot;: chi2.std(df=5)} 
+resultats[&quot;Pareto&quot;] = {&quot;moyenne&quot;: pareto.mean(b=3), &quot;ecart_type&quot;: pareto.std(b=3)} 
+print(resultats) 
+calcul_moyenne_et_ecart()
